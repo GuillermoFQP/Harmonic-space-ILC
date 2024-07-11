@@ -111,29 +111,6 @@ deallocate(alms, map_out, freqmaps, cov_inv, w_l, alm_out)
 
 contains
 
-! Compute the covariance matrix of "nvar" variables with "nobs" observations stacked in a matrix "A"
-subroutine cov_mtx(nvar, nobs, A, C)
-	integer, intent(in)     :: nvar, nobs
-	real(DP), intent(inout) :: A(nvar,nobs)
-	real(DP), intent(out)   :: C(nvar,nvar)
-	integer                 :: i, j
-	real(DP)                :: mean_i, DeltaA(nvar,nobs)
-	
-	! Substract the mean of each variable from each observation
-	do i = 1, nvar
-		mean_i = sum(A(i,:)) / nobs
-		DeltaA(i,:) = A(i,:) - mean_i
-	end do
-	
-	! Compute the covariance matrix
-	do i = 1, nvar
-		do j = 1, nvar
-			if (i <= j) C(i,j) = dot_product(DeltaA(i,:), DeltaA(j,:)) / nobs
-			if (i >  j) C(i,j) = C(j,i)
-		end do
-	end do
-end subroutine cov_mtx
-
 ! Solve the real system of "n" symmetric linear equations in "n" unknowns in the form "A*X=B"
 subroutine mtx_inv(n, A, A_inv)
 	integer, intent(in)   :: n
