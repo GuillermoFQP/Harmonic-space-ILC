@@ -111,7 +111,7 @@ deallocate(alms, map_out, freqmaps, cov_inv, w_l, alm_out)
 
 contains
 
-! Solve the real system of "n" symmetric linear equations in "n" unknowns in the form "A*X=B"
+! Compute the inverse of a symmetric matrix A of order "n"
 subroutine mtx_inv(n, A, A_inv)
 	integer, intent(in)   :: n
 	real(DP), intent(in)  :: A(n,n)
@@ -136,10 +136,10 @@ subroutine mtx_inv(n, A, A_inv)
 	! Stop the program if necessary
 	if (info /= 0) call fatal_error('Singular matrix in subroutine MTX_INV()')
 	
-	! Free memory from Work
+	! Free memory from the WORK array
 	deallocate(work)
 	
-	! Resizing WORK array
+	! Resizing the WORK array
 	allocate(work(n))
 	
 	! LAPACK subroutine to get "A^(-1)" for a symmetric matrix "A"
@@ -154,6 +154,9 @@ subroutine mtx_inv(n, A, A_inv)
 			A_inv(i,j) = A_inv(j,i)
 		end do
 	end do
+
+  	! Free memory from the WORK array
+   	deallocate(work)
 end subroutine mtx_inv
 
 end program hilc
